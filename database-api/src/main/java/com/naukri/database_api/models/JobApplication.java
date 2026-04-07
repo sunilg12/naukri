@@ -1,11 +1,10 @@
 package com.naukri.database_api.models;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.naukri.database_api.enums.ApplicationStatus;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ManyToAny;
 
 import java.time.LocalDateTime;
 
@@ -21,11 +20,16 @@ public class JobApplication {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @ManyToAny
+    @JoinColumn(name = "job_id")
     private Job job;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User applicant;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ApplicationStatus status;
 
     private LocalDateTime appliedAt;
 }

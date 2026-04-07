@@ -1,10 +1,7 @@
 package com.naukri.database_api.models;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -22,8 +19,10 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @ManyToOne
     private User createdBy;
 
+    @ManyToMany
     private List<Skill> skills;
 
     private String location;

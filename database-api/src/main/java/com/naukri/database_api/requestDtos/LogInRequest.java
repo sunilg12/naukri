@@ -1,0 +1,13 @@
+package com.naukri.database_api.requestDtos;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
+public class LogInRequest {
+    String userName;
+    String password;
+}
