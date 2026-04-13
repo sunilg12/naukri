@@ -2,10 +2,13 @@ package com.naukri.database_api.models;
 
 import com.naukri.database_api.enums.UserRole;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -13,36 +16,35 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Setter(AccessLevel.NONE)
-    private int id;
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
+    @Pattern(regexp = "^[a-zA-Z0-9_]{3,20}$",
+            message = "Username should contain alphabets, numbers or underscore")
     private String name;
 
     @Column(unique = true, nullable = false)
+    @Email(message = "Invalid Email")
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(unique = true, nullable = false)
-    private Long phoneNumber;
-
     @Enumerated(EnumType.STRING)
     private UserRole userType;
 
-    @ManyToOne
-    private Company company;
+    @OneToOne
+    private Profile profile;
 
-    @ManyToMany
-    private List<Skill> skills;
-
+    @CreatedDate
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
     private LocalDateTime updatedAt;
-
 }

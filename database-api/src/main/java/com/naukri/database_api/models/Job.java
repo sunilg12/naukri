@@ -1,6 +1,7 @@
 package com.naukri.database_api.models;
 
 
+import com.naukri.database_api.enums.JobStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +18,8 @@ public class Job {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @Setter(AccessLevel.NONE)
+    private Long id;
 
     @ManyToOne
     private User createdBy;
@@ -36,6 +38,8 @@ public class Job {
     private double maxSalary;
 
     private String jobDescription;
+
+    private JobStatus status;
 
     private LocalDateTime createAt;
 

@@ -16,7 +16,8 @@ public class Skill {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @Setter(AccessLevel.NONE)
+    private Long id;
 
     private String name;
 }

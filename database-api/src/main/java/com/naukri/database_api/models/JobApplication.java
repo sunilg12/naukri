@@ -18,7 +18,7 @@ public class JobApplication {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Long id;
 
     @ManyToAny
     @JoinColumn(name = "job_id")
