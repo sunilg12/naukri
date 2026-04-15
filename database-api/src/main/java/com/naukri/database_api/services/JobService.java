@@ -2,27 +2,38 @@ package com.naukri.database_api.services;
 
 import com.naukri.database_api.enums.JobStatus;
 import com.naukri.database_api.enums.UserRole;
+import com.naukri.database_api.exception.UnAuthorizedException;
 import com.naukri.database_api.models.Job;
 import com.naukri.database_api.models.User;
 import com.naukri.database_api.repositories.JobRepository;
 import com.naukri.database_api.repositories.UserRepository;
 import com.naukri.database_api.requestDtos.CreateJobRequest;
+import com.naukri.database_api.security.JwtUtil;
+import io.jsonwebtoken.Claims;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
 
 @Service
 public class JobService {
 
     private final JobRepository jobRepo;
     private final UserRepository userRepo;
+    private final JwtUtil jwtUtil;
+    private final JobService jobService;
+    private final UserService userService;
 
-    JobService(JobRepository jobRepo, UserRepository userRepo){
+    JobService(JobRepository jobRepo, UserRepository userRepo, JwtUtil jwtUtil, JobService jobService,
+               UserService userService){
         this.jobRepo = jobRepo;
         this.userRepo = userRepo;
+        this.jwtUtil = jwtUtil;
+        this.jobService = jobService;
+        this.userService = userService;
     }
 
-    public void createJob(CreateJobRequest request, Long recruiterId){
+    public Job createJob(CreateJobRequest request, Long recruiterId){
         User recruiter = userRepo.findById(recruiterId)
                 .orElseThrow(() -> new RuntimeException("Invalid user"));
         if(recruiter.getUserType() != UserRole.RECRUITER){
@@ -41,6 +52,40 @@ public class JobService {
         job.setCreatedBy(recruiter);
         job.setStatus(JobStatus.ACTIVE);
 
-//        return jobRepo.save(job);
+        return jobRepo.save(job);
     }
+
+    public Job findById(Long jobId){
+        return jobRepo.findById(jobId)
+                .orElseThrow(() -> new RuntimeException("Job Not Found"));
+    }
+
+    public Job updateStatus(String token, Long jobId, String status ){
+        //verify the user by token;
+        Claims claims = JwtUtil.extractClaims(token);
+        User user = userService.findById(Long.valueOf(claims.getId()));
+
+        if(user.getUserType() != UserRole.RECRUITER){
+            throw new UnAuthorizedException("Unauthorized User");
+        }
+
+        Job job = jobService.findById(jobId);
+        if(status.equalsIgnoreCase("ACTIVE")){
+            job.setStatus(JobStatus.ACTIVE);
+        }
+
+        if(status.equalsIgnoreCase("INACTIVE")){
+            job.setStatus(JobStatus.INACTIVE);
+        }
+
+        if(status.equalsIgnoreCase("EXPIRED")){
+            job.setStatus(JobStatus.EXPIRED);
+        }
+
+        jobRepo.save(job);
+
+        return job;
+    }
+
+
 }

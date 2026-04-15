@@ -5,6 +5,8 @@ import com.naukri.database_api.repositories.SkillRepository;
 import com.naukri.database_api.requestDtos.SkillRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class SkillService {
 
@@ -22,5 +24,10 @@ public class SkillService {
         skillRepo.save(s);
 
         return s;
+    }
+
+    public Skill findByName(String name){
+        return skillRepo.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Skill Not Found: " + name));
     }
 }

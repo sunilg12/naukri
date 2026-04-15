@@ -4,6 +4,7 @@ package com.naukri.database_api.models;
 import com.naukri.database_api.enums.ApplicationStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.ManyToAny;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,8 @@ public class JobApplication {
     @JoinColumn(name = "job_id")
     private Job job;
 
+    private Long phoneNumber;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User applicant;
@@ -31,5 +34,6 @@ public class JobApplication {
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
 
+    @CreationTimestamp
     private LocalDateTime appliedAt;
 }

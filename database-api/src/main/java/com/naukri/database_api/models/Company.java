@@ -2,6 +2,8 @@ package com.naukri.database_api.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
@@ -34,7 +36,9 @@ public class Company {
 
     private String industry;
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 }

@@ -1,14 +1,11 @@
 package com.naukri.database_api.requestDtos;
-
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Setter
 @ToString
-public class LogInRequest {
+public class JobApplicationRequest {
 
-    String userName;
-    String password;
+    private Long jobId;
+    private Long phoneNumber;
 }

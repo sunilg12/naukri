@@ -81,8 +81,9 @@ public class UserService {
         }
     }
 
-    public Optional<User> findById(long id){
-        return userRepo.findById(id);
+    public User findById(Long id){
+        return userRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("User Not found"));
     }
 
     public Optional<User> findByEmail(String email){
@@ -95,12 +96,6 @@ public class UserService {
         Date now = new Date();
 //        claims.getIssuer() < now < claims.getExpiration();
         return claims;
-    }
-
-    private Map<String, String> decryptToken(String token) {
-        Map<String, String> details = new HashMap<>();
-            // decrypt
-        return details;
     }
 
     public void deleteUser(String token) {

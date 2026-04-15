@@ -15,7 +15,6 @@ public class JwtUtil {
     public static String generateToken(String username, Long userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
-
         return Jwts.builder()
                 .setSubject(username)
                 .setClaims(claims)
@@ -27,9 +26,23 @@ public class JwtUtil {
 
     public static Claims extractClaims(String token) {
 
-        return Jwts.parser()
+        Claims claim = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody();
+        System.out.print(claim);
+
+        return claim;
+    }
+
+    public boolean isValidToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody();
+
+        Date expiration = claims.getExpiration();
+
+        return expiration.before(new Date());
     }
 }

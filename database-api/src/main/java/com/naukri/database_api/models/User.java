@@ -25,8 +25,8 @@ public class User {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    @Pattern(regexp = "^[a-zA-Z0-9_]{3,20}$",
-            message = "Username should contain alphabets, numbers or underscore")
+//    @Pattern(regexp = "^[a-zA-Z0-9_]{3,20}$",
+//            message = "Username should contain alphabets, numbers or underscore")
     private String name;
 
     @Column(unique = true, nullable = false)
