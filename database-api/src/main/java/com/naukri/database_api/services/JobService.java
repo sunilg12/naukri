@@ -8,11 +8,14 @@ import com.naukri.database_api.models.User;
 import com.naukri.database_api.repositories.JobRepository;
 import com.naukri.database_api.repositories.UserRepository;
 import com.naukri.database_api.requestDtos.CreateJobRequest;
+import com.naukri.database_api.requestDtos.JobSearchRequest;
 import com.naukri.database_api.security.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 
 @Service
@@ -88,4 +91,9 @@ public class JobService {
     }
 
 
+    public List<Job> searchJobs(JobSearchRequest request) {
+        return jobRepo.searchJob(request.getSkills(),request.getLocation(),
+                request.getMinExperience(), request.getMaxExperience(), request.getMinSalary(),
+                request.getMaxSalary());
+    }
 }

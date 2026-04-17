@@ -9,6 +9,7 @@ import com.naukri.database_api.models.User;
 import com.naukri.database_api.repositories.UserRepository;
 import com.naukri.database_api.requestDtos.CreateJobRequest;
 import com.naukri.database_api.requestDtos.JobApplicationRequest;
+import com.naukri.database_api.requestDtos.JobSearchRequest;
 import com.naukri.database_api.security.JwtUtil;
 import com.naukri.database_api.services.JobService;
 import com.naukri.database_api.services.UserService;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -45,5 +47,10 @@ public class JobController {
         //verify the user by token;
         Job job = jobService.updateStatus(token, jobId, status);
         return ResponseEntity.status(HttpStatus.OK).body(job);
+    }
+
+    @GetMapping("/search")
+    public List<Job> searchJobs(@RequestBody JobSearchRequest request){
+        return jobService.searchJobs(request);
     }
 }

@@ -7,13 +7,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/jobApplication")
 public class JobApplicationController {
 
-    JobApplicationService jobApplicationService;
+    private final JobApplicationService jobApplicationService;
 
-    JobApplicationController(JobApplicationService jobApplicationService){
+     private JobApplicationController(JobApplicationService jobApplicationService){
         this.jobApplicationService = jobApplicationService;
     }
 
@@ -22,6 +24,11 @@ public class JobApplicationController {
         JobApplication ja = jobApplicationService.applyJob(token, request);
 
         return  ResponseEntity.status(HttpStatus.OK).body(ja);
+    }
+
+    @GetMapping("/get")
+    public List<JobApplication> getApplicantsBasedOnJobId(Long id){
+        return jobApplicationService.getApplicationsBasedOnJobId(id);
     }
 
 }

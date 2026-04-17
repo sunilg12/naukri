@@ -10,6 +10,8 @@ import com.naukri.database_api.security.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class JobApplicationService {
 
@@ -53,5 +55,9 @@ public class JobApplicationService {
         jobApplicationRepo.save(ja);
 
         return ja;
+    }
+
+    public List<JobApplication> getApplicationsBasedOnJobId(Long id) {
+        return jobApplicationRepo.getApplicationsBasedOnJobId(id);
     }
 }
