@@ -2,7 +2,6 @@ package com.naukri.database_api.services;
 
 import com.naukri.database_api.enums.JobStatus;
 import com.naukri.database_api.enums.UserRole;
-import com.naukri.database_api.exception.UnAuthorizedException;
 import com.naukri.database_api.models.Job;
 import com.naukri.database_api.models.User;
 import com.naukri.database_api.repositories.JobRepository;
@@ -24,15 +23,13 @@ public class JobService {
     private final JobRepository jobRepo;
     private final UserRepository userRepo;
     private final JwtUtil jwtUtil;
-    private final JobService jobService;
     private final UserService userService;
 
-    JobService(JobRepository jobRepo, UserRepository userRepo, JwtUtil jwtUtil, JobService jobService,
+    JobService(JobRepository jobRepo, UserRepository userRepo, JwtUtil jwtUtil,
                UserService userService){
         this.jobRepo = jobRepo;
         this.userRepo = userRepo;
         this.jwtUtil = jwtUtil;
-        this.jobService = jobService;
         this.userService = userService;
     }
 
@@ -69,10 +66,12 @@ public class JobService {
         User user = userService.findById(Long.valueOf(claims.getId()));
 
         if(user.getUserType() != UserRole.RECRUITER){
-            throw new UnAuthorizedException("Unauthorized User");
+            throw new RuntimeException("User not found");
         }
+        //----------------------------------------------------------
 
-        Job job = jobService.findById(jobId);
+        Job job = jobRepo.findById(jobId)
+                .orElseThrow(() -> new RuntimeException("Job Not Found"));
         if(status.equalsIgnoreCase("ACTIVE")){
             job.setStatus(JobStatus.ACTIVE);
         }

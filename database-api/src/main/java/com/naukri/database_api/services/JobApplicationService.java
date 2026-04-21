@@ -36,7 +36,7 @@ public class JobApplicationService {
         Claims claims = JwtUtil.extractClaims(token);
         User user = userService.findById(Long.parseLong(claims.getId()));
 
-        if(jwtUtil.isValidToken(token)){
+        if(!jwtUtil.isValidToken(token)){
             throw new RuntimeException("Session expired");
         }
         Job job = jobService.findById(request.getJobId());

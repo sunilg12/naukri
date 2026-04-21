@@ -12,6 +12,7 @@ public class CompanyRequest {
     private String email;
     private String websiteLink;
     private String description;
+    private CreateUserRequest admin;
     private int companySize;
     private String industry;
 }

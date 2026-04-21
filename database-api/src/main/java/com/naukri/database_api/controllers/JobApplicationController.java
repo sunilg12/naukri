@@ -15,7 +15,7 @@ public class JobApplicationController {
 
     private final JobApplicationService jobApplicationService;
 
-     private JobApplicationController(JobApplicationService jobApplicationService){
+    JobApplicationController(JobApplicationService jobApplicationService){
         this.jobApplicationService = jobApplicationService;
     }
 
@@ -27,7 +27,7 @@ public class JobApplicationController {
     }
 
     @GetMapping("/get")
-    public List<JobApplication> getApplicantsBasedOnJobId(Long id){
+    public List<JobApplication> getApplicantsBasedOnJobId(@RequestParam Long id){
         return jobApplicationService.getApplicationsBasedOnJobId(id);
     }
 

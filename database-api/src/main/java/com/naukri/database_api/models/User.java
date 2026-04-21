@@ -39,6 +39,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole userType;
 
+    private Company company;
+
     @OneToOne
     private Profile profile;
 
