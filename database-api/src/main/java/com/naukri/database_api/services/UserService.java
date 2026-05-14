@@ -11,6 +11,8 @@ import com.naukri.database_api.requestDtos.CreateUserRequest;
 import com.naukri.database_api.security.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
@@ -20,6 +22,9 @@ public class UserService {
     private final UserRepository userRepo;
     private final JwtUtil jwtUtil;
     private final CompanyRepository companyRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     UserService(UserRepository userRepo, JwtUtil jwtUtil, CompanyRepository companyRepository){
         this.userRepo = userRepo;
@@ -40,7 +45,7 @@ public class UserService {
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .userType(UserRole.JOB_SEEKER)
                 .company(null)
                         .profile(buildProfile(request))
@@ -61,11 +66,13 @@ public class UserService {
             throw new RuntimeException("User Already registered");
         });
 
+        String encodedPass = request.getPassword();;
+
         buildUserNameIfDoesNotExist(request);
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .password(encodedPass)
                 .userType(UserRole.ADMIN)
                 .company(company)
 //                .profile(buildProfile(request))
@@ -96,7 +103,7 @@ public class UserService {
         }
 
         User user = userOpt.get();
-        if(!user.getPassword().equals(request.getPassword())){
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
             throw new RuntimeException("Password is Incorrect");
         }
 

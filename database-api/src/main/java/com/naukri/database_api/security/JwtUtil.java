@@ -4,8 +4,10 @@ import com.naukri.database_api.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +15,8 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "key-test";
+    private static final String SECRET_KEY = "key-testskkpdfasoojlkfmlsfmgasmfllkmasdfae";
+    private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
     public String generateToken(String username, Long userId, UserRole role) {
         Map<String, Object> claims = new HashMap<>();
@@ -21,32 +24,34 @@ public class JwtUtil {
         claims.put("role", role.name());
         return Jwts.builder()
                 .setSubject(username)
-                .setClaims(claims)
+                .addClaims(claims)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .signWith( key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public static Claims extractClaims(String token) {
-
         Claims claim = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody();
-//        System.out.print(claim);
 
         return claim;
     }
 
-    public boolean isValidToken(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody();
-
+    public boolean validToken(String token) {
+        Claims claims = extractClaims(token);
         Date expiration = claims.getExpiration();
+        return expiration.after(new Date());
+    }
 
-        return expiration.before(new Date());
+    public String extractToken(String authorization) {
+        return authorization.substring(7);
+    }
+
+    public String extractUserNameFromToken(String token){
+        Claims body = extractClaims(token);
+        return body.getSubject();
     }
 }

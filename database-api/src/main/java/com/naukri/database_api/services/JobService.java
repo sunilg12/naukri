@@ -33,7 +33,10 @@ public class JobService {
         this.userService = userService;
     }
 
-    public Job createJob(CreateJobRequest request, Long recruiterId){
+    public Job createJob(CreateJobRequest request, String authorization){
+
+        String token = jwtUtil.extractToken(authorization);
+
         User recruiter = userRepo.findById(recruiterId)
                 .orElseThrow(() -> new RuntimeException("Invalid user"));
         if(recruiter.getUserType() != UserRole.RECRUITER){

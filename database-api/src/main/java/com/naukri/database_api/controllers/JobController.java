@@ -27,8 +27,8 @@ public class JobController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createJob(CreateJobRequest request, Long recruiterId){
-        Job job = jobService.createJob(request, recruiterId);
+    public ResponseEntity<?> createJob(CreateJobRequest request, String authorization){
+        Job job = jobService.createJob(request, authorization);
         return ResponseEntity.status(201).body(job);
     }
 
